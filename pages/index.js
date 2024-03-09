@@ -2,6 +2,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { Merriweather } from "next/font/google";
 import { FaArrowRight } from "react-icons/fa";
+import { Card,CardActions,CardContent,CardMedia,Typography,Button } from "@mui/material";
 
 const MerriReg400 = Merriweather({
   subsets:['latin'],
@@ -52,6 +53,34 @@ export default function Index() {
         </div>
 
         {/* shop intro section */}
+        <section className="min-h-[420px] grid grid-cols-3 bg-black">
+          <article className="flex justify-center items-center bg-yellow-400">
+            <Card sx={{ maxWidth: 345 }}>
+              <CardMedia
+                sx={{ height: 140 }}
+                image="/bg_desktop.jpg"
+                title="green iguana"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  Lizard
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Lizards are a widespread group of squamate reptiles, with over 6,000
+                  species, ranging across all continents except Antarctica
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small">Share</Button>
+                <Button size="small">Learn More</Button>
+              </CardActions>
+            </Card>
+          </article>
+
+          <aside className="col-span-2 bg-green-400">
+
+          </aside>
+        </section>
       </main>
     </>
   );
