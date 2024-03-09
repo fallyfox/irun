@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* My custom CSS */
+
+/* bg image for desktop */
+.bg-desktop {
+    background-image: url('/bg_desktop.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+/* bg image for mobile */
+.bg-mobile {
+    background-image: url('/bg_mobile.jpg');
+    background-position: center;
+    background-size: cover;
+}
