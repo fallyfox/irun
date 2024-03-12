@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Head from "next/head";
+import Image from "next/image";
 import { Merriweather } from "next/font/google";
 import { FaArrowRight } from "react-icons/fa";
 import { Card,CardActions,CardContent,CardMedia,Typography,Button } from "@mui/material";
@@ -77,8 +78,17 @@ export default function Index() {
             </Card>
           </article>
 
-          <aside className="col-span-2 bg-green-400">
+          <aside className="col-span-2 p-16 bg-green-400">
+            <div className="grid grid-cols-2 gap-2">
+              <Image width={300} height={400} src='/hair_hori.jpg'/>
 
+              <div className="grid grid-cols-2 grid-rows-2 gap-2">
+                <Image width={200} height={200} src='/hair_1.jpg' alt="hair sample"/>
+                <Image width={200} height={200} src='/hair_2.jpg' alt="hair sample"/>
+                <Image width={200} height={200} src='/hair_3.jpg' alt="hair sample"/>
+                <Image width={200} height={200} src='/hair_4.jpg' alt="hair sample"/>
+              </div>
+            </div>
           </aside>
         </section>
       </main>
