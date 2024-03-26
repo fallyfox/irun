@@ -2,6 +2,8 @@ import Head from "next/head";
 import { TextField,Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from 'yup';
+import { firestoreDB } from "@/config/firebase.config";
+import { collection,addDoc } from "firebase/firestore";
 
 const formRules = yup.object().shape({
     productName:yup.string().required('This field is mandatory').min(3,'Minimum of 3 character required').max(10,'Maximum of 10 characters'),
@@ -15,11 +17,19 @@ export default function CreateAccount() {
     const { values,handleChange,handleBlur,errors,touched,handleSubmit } = useFormik({
         initialValues:{productName:'',desc:'',price:0,stock:1},
         onSubmit: () => {
-            console.log(values.productName);
+            addDoc(collection(firestoreDB,'products'),{
+                productName:values.productName,
+                desc:values.desc,
+                price:values.price,
+                stock:values.stock,
+                createdAt:new Date().getTime(),
+            })
+            .then(() => console.log('successful'))
+            .catch((e) => console.log(e))
         },
         validationSchema:formRules
     });
-
+    
     return (
         <>
         <Head>
