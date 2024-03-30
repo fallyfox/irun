@@ -1,4 +1,7 @@
 import Head from "next/head";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { useSession } from "next-auth/react";//////////
 import { TextField,Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from 'yup';
@@ -6,13 +9,14 @@ import { firestoreDB } from "@/config/firebase.config";
 import { collection,addDoc } from "firebase/firestore";
 
 const formRules = yup.object().shape({
-    productName:yup.string().required('This field is mandatory').min(3,'Minimum of 3 character required').max(10,'Maximum of 10 characters'),
+    productName:yup.string().required('This field is mandatory').min(3,'Minimum of 3 character required').max(1000,'Maximum of 10 characters'),
     desc:yup.string().required('This field is mandatory').min(16,'Minimum of 16 character required').max(10000,'Maximum of 10,000 characters'),
     price:yup.number().required().min(100),
     stock:yup.number().required().min(1)
 });
 
 export default function CreateAccount() {
+    const {data:session} = useSession();///////
 
     const { values,handleChange,handleBlur,errors,touched,handleSubmit } = useFormik({
         initialValues:{productName:'',desc:'',price:0,stock:1},
@@ -23,6 +27,7 @@ export default function CreateAccount() {
                 price:values.price,
                 stock:values.stock,
                 createdAt:new Date().getTime(),
+                createdBy: session.uid,
             })
             .then(() => console.log('successful'))
             .catch((e) => console.log(e))
@@ -108,4 +113,25 @@ export default function CreateAccount() {
         </main>
         </>
     )
+}
+
+export async function getServerSideProps (context) {
+    const session = await getServerSession(context.req,context.res,authOptions);
+    
+    if (session) {
+        if (session.user_data?.accountType == 'admin') {
+            return {redirect:{destination:'/admin/create-product',permanent:false}}
+        } 
+        else if (session.user_data?.accountType == 'buyer') {
+            return {redirect:{destination:'/',permanent:false}}
+        } 
+    } else {
+        return {redirect:{destination:'/auth/signin',permanent:false}}
+    }
+    
+    return {
+        props:{
+            session:JSON.parse(JSON.stringify(session))
+        }
+    }
 }
