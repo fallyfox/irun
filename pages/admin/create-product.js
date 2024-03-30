@@ -119,12 +119,12 @@ export async function getServerSideProps (context) {
     const session = await getServerSession(context.req,context.res,authOptions);
     
     if (session) {
-        if (session.user_data?.accountType == 'admin') {
-            return {redirect:{destination:'/admin/create-product',permanent:false}}
-        } 
-        else if (session.user_data?.accountType == 'buyer') {
-            return {redirect:{destination:'/',permanent:false}}
-        } 
+        // if (session.user_data?.accountType == 'admin') {
+        //     return {redirect:{destination:'/admin/create-product',permanent:false}}
+        // } 
+        // else if (session.user_data?.accountType == 'buyer') {
+        //     return {redirect:{destination:'/',permanent:false}}
+        // } 
     } else {
         return {redirect:{destination:'/auth/signin',permanent:false}}
     }
