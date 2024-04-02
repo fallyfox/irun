@@ -158,7 +158,7 @@ export default function ProductView({product}) {
         aria-describedby="modal-modal-description"
         >
             <div className='h-full flex justify-center items-center'>
-                <blockquote className='bg-gray-200 w-full md:w-[320px] h-44 flex flex-col justify-center items-center py-4 px-3 rounded-md'>
+                <blockquote className='bg-gray-200 w-full md:w-[320px] min-h-44 flex flex-col justify-center items-center gap-4 py-4 px-3 rounded-md'>
                     <span><MdOutlineDoneAll className='text-8xl text-green-600'/></span>
                     <p className='text-xl text-green-800 text-center'>Your order was placed successfully</p>
                     <Button onClick={handleClose}>Close</Button>
