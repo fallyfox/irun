@@ -1,3 +1,4 @@
+import React,{ useEffect,useState } from 'react';
 import Head from "next/head";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
@@ -5,32 +6,64 @@ import { useSession } from "next-auth/react";//////////
 import { TextField,Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from 'yup';
-import { firestoreDB } from "@/config/firebase.config";
-import { collection,addDoc } from "firebase/firestore";
+import { firestoreDB,storage } from "@/config/firebase.config";
+import { collection,addDoc,doc,updateDoc } from 'firebase/firestore';
+import { ref,uploadString,getDownloadURL } from 'firebase/storage';
 
 const formRules = yup.object().shape({
     productName:yup.string().required('This field is mandatory').min(3,'Minimum of 3 character required').max(1000,'Maximum of 10 characters'),
     desc:yup.string().required('This field is mandatory').min(16,'Minimum of 16 character required').max(10000,'Maximum of 10,000 characters'),
     price:yup.number().required().min(100),
-    stock:yup.number().required().min(1)
+    stock:yup.number().required().min(1),
+    page_path:yup.string().required().min(3),
 });
 
 export default function CreateAccount() {
-    const {data:session} = useSession();///////
+    const {data:session} = useSession();
+    const [selectedFile,setSelectedFile] = useState(null);
+
+    const addImageToPost = (e) => {
+        const reader = new FileReader();
+
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        reader.onload = readerEvent => {
+            setSelectedFile(readerEvent.target.result);
+        }
+    }
+
+    const createProduct = async () => {
+        const docRef = await addDoc(collection(db,'products'),{
+            productName:values.productName,
+            desc:values.desc,
+            page_path:values.page_path,
+            price:values.price,
+            stock:values.stock,
+            createdAt:new Date().getTime(),
+            createdBy: session.uid,
+        });
+
+        const imageRef = ref(storage,`products/${docRef.id}/image`);
+
+        if (selectedFile) {
+            await uploadString(imageRef,selectedFile,"data_url")
+            .then(async () => {
+                const downloadURL = await getDownloadURL(imageRef);
+                await updateDoc(doc(db,'products',docRef.id),{
+                    coverImage:downloadURL
+                });
+            });
+        } else {
+        
+        }
+    }
 
     const { values,handleChange,handleBlur,errors,touched,handleSubmit } = useFormik({
-        initialValues:{productName:'',desc:'',price:0,stock:1},
+        initialValues:{productName:'',desc:'',price:0,stock:1,page_path},
         onSubmit: () => {
-            addDoc(collection(firestoreDB,'products'),{
-                productName:values.productName,
-                desc:values.desc,
-                price:values.price,
-                stock:values.stock,
-                createdAt:new Date().getTime(),
-                createdBy: session.uid,
-            })
-            .then(() => console.log('successful'))
-            .catch((e) => console.log(e))
+            createProduct();
         },
         validationSchema:formRules
     });
@@ -71,6 +104,20 @@ export default function CreateAccount() {
                        ? <span className="text-red-500 text-xs">{errors.desc}</span> 
                        : null}
                     </div>
+                    <div className="mb-2">
+                        <label className="text-gray-500 text-sm">Product URL</label>
+                        <TextField
+                        placeholder="eg. samsung-galaxy"
+                        className="w-full"
+                        id="page_path"
+                        multiline={true}
+                        value={values.page_path}
+                        onChange={handleChange}
+                        onBlur={handleBlur}/>
+                       {touched.page_path && errors.page_path 
+                       ? <span className="text-red-500 text-xs">{errors.page_path}</span> 
+                       : null}
+                    </div>
 
                     <div className="mb-2">
                         <label className="text-gray-500 text-sm">Product price</label>
@@ -100,6 +147,16 @@ export default function CreateAccount() {
                        {touched.stock && errors.stock 
                        ? <span className="text-red-500 text-xs">{errors.stock}</span> 
                        : null}
+                    </div>
+
+                    <div className="mb-2">
+                        <input 
+                        className={styles.input}
+                        type="file"
+                        accept="image/*"
+                        id="filePicker"
+                        onChange={addImageToPost}
+                        />
                     </div>
 
                     <Button 
