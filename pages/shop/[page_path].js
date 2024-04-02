@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { firestoreDB } from '@/config/firebase.config';
 import { collection,getDocs,query,where } from "firebase/firestore";
+import { Button } from '@mui/material';
 
 export async function getStaticPaths () {
   const querySnapshot = await getDocs(collection(firestoreDB,'products'))
@@ -55,8 +56,16 @@ export default function ProductView({product}) {
             src={product.coverImage} 
             alt={product.productName}/>
         </article>
-        <aside className='col-span-2'>
-
+        <aside className='min-h-[420px] col-span-2'>
+            <h2 className='text-3xl text-gray-800'>{product.productName}</h2>
+            <p className='text-xl text-gray-700 mt-8'>{product.desc}</p>
+            <div className='w-full flex justify-between gap-8 md:gap-0 mt-8'>
+                <p className='text-3xl text-gray-800'>₦{product.price}</p>
+                <Button
+                variant='contained'
+                className='text-sky-700'
+                onClick={() => {}}>Buy Now</Button>
+            </div>
         </aside>
       </section>
     </>
