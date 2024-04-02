@@ -46,45 +46,6 @@ export default function Index() {
             </div>
           </div>
         </div>
-
-        {/* shop intro section */}
-        <section className="min-h-[420px] grid grid-cols-3 bg-black">
-          <article className="flex justify-center items-center bg-yellow-400">
-            <Card sx={{ maxWidth: 345 }}>
-              <CardMedia
-                sx={{ height: 140 }}
-                image="/bg_desktop.jpg"
-                title="green iguana"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  Lizard
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Learn More</Button>
-              </CardActions>
-            </Card>
-          </article>
-
-          <aside className="col-span-2 p-16 bg-green-400">
-            <div className="grid grid-cols-2 gap-2">
-              <Image width={300} height={400} src='/hair_hori.jpg'/>
-
-              <div className="grid grid-cols-2 grid-rows-2 gap-2">
-                <Image width={200} height={200} src='/hair_1.jpg' alt="hair sample"/>
-                <Image width={200} height={200} src='/hair_2.jpg' alt="hair sample"/>
-                <Image width={200} height={200} src='/hair_3.jpg' alt="hair sample"/>
-                <Image width={200} height={200} src='/hair_4.jpg' alt="hair sample"/>
-              </div>
-            </div>
-          </aside>
-        </section>
       </main>
     </>
   );
