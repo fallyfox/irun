@@ -35,7 +35,7 @@ export default function CreateAccount() {
     }
 
     const createProduct = async () => {
-        const docRef = await addDoc(collection(db,'products'),{
+        const docRef = await addDoc(collection(firestoreDB,'products'),{
             productName:values.productName,
             desc:values.desc,
             page_path:values.page_path,
@@ -51,7 +51,7 @@ export default function CreateAccount() {
             await uploadString(imageRef,selectedFile,"data_url")
             .then(async () => {
                 const downloadURL = await getDownloadURL(imageRef);
-                await updateDoc(doc(db,'products',docRef.id),{
+                await updateDoc(doc(firestoreDB,'products',docRef.id),{
                     coverImage:downloadURL
                 });
             });
@@ -61,7 +61,7 @@ export default function CreateAccount() {
     }
 
     const { values,handleChange,handleBlur,errors,touched,handleSubmit } = useFormik({
-        initialValues:{productName:'',desc:'',price:0,stock:1,page_path},
+        initialValues:{productName:'',desc:'',price:0,stock:1,page_path:''},
         onSubmit: () => {
             createProduct();
         },
@@ -73,7 +73,7 @@ export default function CreateAccount() {
         <Head>
             <title>Irun Admin | Create a Product</title>
         </Head>
-        <main className="h-screen flex justify-center bg-gray-300 py-4 md:py-8">
+        <main className="min-h-screen flex justify-center bg-gray-300 py-4 md:py-8">
             <div className="w-full md:w-[400px] px-2 md:px-4 py-2 md:py-4 bg-gray-200 rounded-md">
                 <form onSubmit={handleSubmit}>
                     <div className="mb-2">
@@ -151,7 +151,7 @@ export default function CreateAccount() {
 
                     <div className="mb-2">
                         <input 
-                        className={styles.input}
+                        className=""
                         type="file"
                         accept="image/*"
                         id="filePicker"

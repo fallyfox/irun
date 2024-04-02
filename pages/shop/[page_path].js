@@ -25,7 +25,7 @@ export const getStaticProps = async (context) => {
   const page_path = context.params.page_path
 
   const products = []
-  const q = query(collection(db,'products'),where('page_path','==',page_path))
+  const q = query(collection(firestoreDB,'products'),where('page_path','==',page_path))
   const querySnapShot = await getDocs(q)
   querySnapShot.docs.map(doc => {
     let document = doc.data();
@@ -45,11 +45,20 @@ export default function ProductView({product}) {
       <Head>
         <link rel="alternate" href="#" hrefLang="en-us" />
         <link rel="icon" href="" />
-        <title>{course.course_title} | early code</title>
+        <title>{product.productName} | Irun</title>
       </Head>
-      <main className='grid md:grid-cols-3 gap-8 py-10 px-8 sm:px-16'>
-        {product.title}
-      </main>
+      <section className='grid md:grid-cols-3 gap-8 py-10 px-8 sm:px-16'>
+        <article>
+            <Image
+            width={520}
+            height={460}
+            src={product.coverImage} 
+            alt={product.productName}/>
+        </article>
+        <aside className='col-span-2'>
+
+        </aside>
+      </section>
     </>
   )
 }
